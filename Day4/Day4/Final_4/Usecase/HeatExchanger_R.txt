@@ -1,0 +1,154 @@
+## Linear Regression
+
+setwd("C://R")             #Set Working Directory
+he=read.csv("htex.csv")    #Read the data file
+View(he)                   #Check what is there in the file
+head(he)                   #Check if the data is populated/imported properly
+tail(he)
+summary(he)                #Check the summary of the file
+plot(he$Fouling.Resistance)#Generate plot of Dependent variable (Fouling Resistance)
+quantile(he$Fouling.Resistance, c(0,0.05,0.1,0.25,0.5,0.75,0.90,0.95,0.99,0.995,1)) #Check the quantile to find out the outlier limit
+which(he$Fouling.Resistance>=0.010935163, arr.ind=TRUE)  #To find the row number for specific value
+he1=he[-c(45:48,50:55,181),]   #To delete rows
+View(he1)                      #View the dataset to check rows are been deleted 
+plot(he1$Fouling.Resistance)
+library(ggplot2)
+h=ggplot(he1,aes(Crude.Temp.In,Fouling.Resistance))+geom_line(color="blue")
+plot(h)
+FitLinReg=lm(Fouling.Resistance~Crude.Temp.In+Crude.Temp.Out+CDU1.rate....KBPD.+Crude.Flow.rate..kg.hr.+Kero.Temp.In+Kero.Temp.Out+Kero.Flow.m3.hr+Furnace.inlet.temp..deg.C.+Crude.Temp.Increase+Kero.Temp.decrease+Q..heat.exchanged..MW+Hot.in...Cold.out+Hot.out..Cold.in+LMTD+U.transfer.rate+Cummulative.Flow.Tones.per.day,data=he1)
+summary(FitLinReg)
+FitLinReg=lm(Fouling.Resistance~Crude.Temp.In+Crude.Temp.Out+Crude.Temp.Increase+Q..heat.exchanged..MW+LMTD+Cummulative.Flow.Tones.per.day,data=he1)
+summary(FitLinReg)
+library(car)
+vif(FitLinReg)
+cti=lm(Fouling.Resistance~Crude.Temp.Increase,data=he1)
+q=lm(Fouling.Resistance~Q..heat.exchanged..MW,data=he1)
+summary(cti)
+summary(q)
+FitLinReg=lm(Fouling.Resistance~Crude.Temp.In+Crude.Temp.Out+Q..heat.exchanged..MW+LMTD+Cummulative.Flow.Tones.per.day,data=he1)
+summary(FitLinReg)
+FitLinReg=lm(Fouling.Resistance~Q..heat.exchanged..MW+LMTD+Cummulative.Flow.Tones.per.day,data=he1)
+summary(FitLinReg)
+vif(FitLinReg)
+pred = predict(FitLinReg,type="response")
+pred
+# # write.csv(pred,"output_fitlinreg.csv", row.names = F)
+ ## library("sandwich")
+## vcovHC(FitLinReg,omega=NULL, type="HC4")
+## install.packages("lmtest")
+## library("lmtest")
+## coeftest(FitLinReg,df=Inf,vcov=vcovHC(FitLinReg,type="HC4"))
+he2=he1[,-c(2:11,13,14,16)]
+View(he2)
+he2$predicted = predict(FitLinReg,type="response")
+write.csv(he2,"output_htex.csv", row.names = F)
+
+## Time Series
+## to predict fouling factor we need to 1st predict the real time 
+## values through time series and then substitute respective values in the 
+## regression model to get predicted values of fouling factors.
+library(forecast)
+cti=he1[,-c(3:18)]
+View(cti)
+cti1=ts(cti,frequency = 7)
+View(cti1)
+cti2=cti1[,-c(1)]
+fit=ets(cti2)
+plot(fit)
+fc=forecast(fit,h=30)
+plot(fc)
+fc
+write.csv(fc,"output_fc.csv", row.names = F)
+cto=he1[,-c(2,4:18)]
+View(cto)
+cto1=ts(cto,frequency = 7)
+View(cto1)
+cto2=cto1[,-c(1)]
+fit1=ets(cto2)
+plot(fit1)
+fc1=forecast(fit1,h=30)
+plot(fc1)
+fc1
+write.csv(fc1,"output_fc1.csv", row.names = F)
+cf=he1[,-c(2,3,5:18)]
+View(cf)
+cf1=ts(cf,frequency=7)
+cf2=cf1[,-c(1)]
+plot(cf2)
+acf(cf2)
+pacf(cf2)
+d1=diff(cf2)
+plot(d1)
+d2=diff(d1)
+plot(d2)
+plot(d1)
+ARIMAfit=auto.arima(cf2)
+summary(ARIMAfit)
+pred=predict(ARIMAfit,n.ahead=30)
+pred
+kti=he1[,-c(2:5,7:18)]
+> View(kti)
+> kti1=ts(kti,frequency = 7)
+> kti2=kti1[,-c(1)]
+> plot(kti2)
+> fit3=ets(kti2)
+> plot(fit3)
+> fc3=forecast(fit3,h=30)
+> plot(fc3)
+> plot(kti2)
+> acf(kti2)
+> pacf(kti2)
+> d1=diff(kti2)
+> plot(d1)
+> d2=diff(d1)
+> plot(d2)
+> d3=diff(d2)
+> plot(d3)
+> plot(d2)
+> plot(d1)
+> plot(d2)
+> plot(d3)
+> ARIMAfit1=auto.arima(kti2,approximation = FALSE,trace = FALSE)
+> summary(ARIMAfit1)
+pred1=predict(ARIMAfit1,n.ahead=30)
+> pred1
+kto=he1[,-c(2:6,8:18)]
+> View(kto)
+> kto1=ts(kto,frequency = 7)
+> kto2=kto1[,-c(1)]
+> plot(kto2)
+fit4=ets(kti2)
+> plot(fit4)
+> fc4=forecast(fit4,h=30)
+> plot(fc4)
+> plot(kto2)
+> acf(kto2)
+> pacf(kto2)
+> d1=diff(kto2)
+> plot(d1)
+> d2=diff(d1)
+> plot(d2)
+> plot(d1)
+> plot(d2)
+> d3=diff(d2)
+> plot(d3)
+d4=diff(d3)
+> plot(d4)
+> plot(d3)
+> plot(d2)
+> plot(d1)
+> plot(d2)
+> plot(d3)
+> plot(d4)
+> plot(d3)
+> ARIMAfit2=auto.arima(kto2)
+> summary(ARIMAfit2)
+pred2=predict(ARIMAfit2,n.ahead=30)
+> pred2
+
+### Putting values in regression equation
+> View(he2)
+> pfr=read.csv("Predict_fr.csv")
+> View(pfr)
+> pfr$Estimated_Fouling.Resistance=8.29E-03-1.40E-03*pfr$Q..Heat.exchanged.+9.69E-05*pfr$LMTD-1.18E-10*pfr$Cumulative.flow
+> write.csv(pfr,"Predicted_fr.csv",row.names = F)

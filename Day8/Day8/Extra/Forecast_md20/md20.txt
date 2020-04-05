@@ -1,0 +1,76 @@
+> setwd("C://R")
+> md20=read.csv("md20.csv")
+> View(md20)
+> md20=ts(md20,start=2012,frequency = 7)
+> md720=md20[,-c(1)]
+> View(md720)
+> plot(md720)
+> acf(md720)
+> pacf(md720)
+> plot(md720)
+> acf(md720)
+> pacf(md720)
+> plot(diff(md720))
+> plot(diff(diff(720)))
+Error in plot.window(...) : need finite 'xlim' values
+In addition: Warning messages:
+1: In min(x) : no non-missing arguments to min; returning Inf
+2: In max(x) : no non-missing arguments to max; returning -Inf
+3: In min(x) : no non-missing arguments to min; returning Inf
+4: In max(x) : no non-missing arguments to max; returning -Inf
+> plot(diff(diff(md720)))
+> plot(diff(diff(md720)))
+> plot(diff(diff(diff(md720))))
+> plot(diff(diff(md720)))
+> plot(diff(diff(diff(md720))))
+> plot(diff(diff(md720)))
+> plot(diff(md720))
+> plot(diff(diff(md720)))
+> library(forecast)
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: timeDate
+This is forecast 7.2 
+
+> ARIMAfit=auto.arima(md141)
+Error in as.ts(x) : object 'md141' not found
+> ARIMAfit=auto.arima(md720)
+> summary(ARIMAfit)
+Series: md720 
+ARIMA(1,0,1)(2,0,0)[7] with non-zero mean 
+
+Coefficients:
+         ar1     ma1    sar1    sar2  intercept
+      0.4791  0.2187  0.3110  0.4146     0.1894
+s.e.  0.1052  0.1174  0.0675  0.0697     0.0360
+
+sigma^2 estimated as 0.004478:  log likelihood=238.87
+AIC=-465.73   AICc=-465.26   BIC=-446.38
+
+Training set error measures:
+                        ME       RMSE        MAE  MPE MAPE      MASE        ACF1
+Training set -0.0004819759 0.06601407 0.05149167 -Inf  Inf 0.7224341 0.008195403
+> md720.pred=predict(md720,n.ahead=7)
+Error in etsmodel(y, errortype[i], trendtype[j], seasontype[k], damped[l],  : 
+  unused argument (n.ahead = 7)
+> md720.pred=predict(ARIMAfit,n.ahead=7)
+> md720.pred
+$pred
+Time Series:
+Start = c(2038, 5) 
+End = c(2039, 4) 
+Frequency = 7 
+[1] 0.03622228 0.14568436 0.13723933 0.04425535 0.06380793 0.12060292 0.12770625
+
+$se
+Time Series:
+Start = c(2038, 5) 
+End = c(2039, 4) 
+Frequency = 7 
+[1] 0.06691966 0.08160102 0.08461203 0.08528812 0.08544254 0.08547795 0.08548607

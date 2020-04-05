@@ -1,0 +1,61 @@
+> setwd("C://R")
+> tmd=read.csv("Trymd.csv")
+Error in file(file, "rt") : cannot open the connection
+In addition: Warning message:
+In file(file, "rt") :
+  cannot open file 'Trymd.csv': No such file or directory
+> tmd=read.csv("Trymd.csv")
+> View(tmd)
+> tail(tmd)
+   Months       KWH
+24 Dec-13 0.1900782
+25 Jan-14 0.0150559
+26 Feb-14 0.2359284
+27 Mar-14 0.2835101
+28 Apr-14 0.1360067
+29 May-14 0.2791047
+> tmd=ts(tmd,start=2012,frequency = 12)
+> tmd1=tmd[,-c(1)]
+> View(tmd1)
+> plot(tmd1)
+> acf(tmd1)
+> pacf(tmd1)
+> plot(diff(tmd1))
+> plot(diff(diff(tmd1)))
+> plot(diff(diff(diff(tmd1))))
+> plot(diff(diff(diff(diff(tmd1)))))
+> plot(diff(diff(tmd1)))
+> plot(diff(tmd1))
+> plot(diff(diff(diff(tmd1))))
+> plot(diff(diff(diff(diff(tmd1)))))
+> plot(diff(diff(diff(diff(diff(tmd1))))))
+> plot(diff(diff(diff(diff(diff(diff(tmd1)))))))
+> plot(diff(diff(diff(diff(diff(tmd1))))))
+> library(forecast)
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: timeDate
+This is forecast 7.2 
+
+> ARIMAfit=auto.arima(tmd1)
+> summary(tmd1)
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.01506 0.10730 0.27910 0.29050 0.46830 0.74410 
+> Summary(tmd1)
+Error in (function (classes, fdef, mtable)  : 
+  unable to find an inherited method for function ‘Summary’ for signature ‘"ts"’
+> tmd1.pred=predict(ARIMAfit,n.ahead=6)
+> tmd1.pred
+$pred
+           Jun       Jul       Aug       Sep       Oct       Nov
+2014 0.6518932 0.2856342 0.2501874 0.4683238 0.5886352 0.7227140
+
+$se
+           Jun       Jul       Aug       Sep       Oct       Nov
+2014 0.2354922 0.2354922 0.2354922 0.2354922 0.2354922 0.2354922

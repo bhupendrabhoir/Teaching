@@ -1,0 +1,99 @@
+> setwd("C://R")
+> md23=read.csv("md23.csv")
+> View(md23)
+> md23=ts(md23,start = 2012,frequency = 7)
+> md723=md23[,-c(1)]
+> View(md723)
+> plot(md723)
+> acf(md723)
+> pacf(md723)
+> acf(md723)
+> pacf(md723)
+> plot(diff(md723))
+> plot(diff(diff(723)))
+Error in plot.window(...) : need finite 'xlim' values
+In addition: Warning messages:
+1: In min(x) : no non-missing arguments to min; returning Inf
+2: In max(x) : no non-missing arguments to max; returning -Inf
+3: In min(x) : no non-missing arguments to min; returning Inf
+4: In max(x) : no non-missing arguments to max; returning -Inf
+> plot(diff(diff(md723)))
+> plot(diff(diff(diff(723))))
+Error in plot.window(...) : need finite 'xlim' values
+In addition: Warning messages:
+1: In min(x) : no non-missing arguments to min; returning Inf
+2: In max(x) : no non-missing arguments to max; returning -Inf
+3: In min(x) : no non-missing arguments to min; returning Inf
+4: In max(x) : no non-missing arguments to max; returning -Inf
+> plot(diff(diff(diff(md723))))
+> plot(diff(md723))
+> plot(diff(diff(md723)))
+> plot(diff(diff(diff(md723))))
+> plot(diff(diff(md723)))
+> plot(diff(diff(diff(md723))))
+> plot(diff(diff(md723)))
+> library(forecast)
+Loading required package: zoo
+
+Attaching package: ‘zoo’
+
+The following objects are masked from ‘package:base’:
+
+    as.Date, as.Date.numeric
+
+Loading required package: timeDate
+This is forecast 7.2 
+
+> ARIMAfit=auto.arima(md723)
+> summary(ARIMAfit)
+Series: md723 
+ARIMA(3,1,0)(2,0,0)[7]                    
+
+Coefficients:
+          ar1      ar2      ar3    sar1    sar2
+      -0.2623  -0.1655  -0.1456  0.3731  0.3006
+s.e.   0.0727   0.0759   0.0748  0.0735  0.0786
+
+sigma^2 estimated as 0.01568:  log likelihood=122.48
+AIC=-232.97   AICc=-232.5   BIC=-213.65
+
+Training set error measures:
+                      ME      RMSE        MAE  MPE MAPE      MASE        ACF1
+Training set -0.00501346 0.1231992 0.07944088 -Inf  Inf 0.7910165 -0.01480942
+> md723.pred=predict(ARIMAfit,n.ahead=7)
+> md723.pred
+$pred
+Time Series:
+Start = c(2038, 5) 
+End = c(2039, 4) 
+Frequency = 7 
+[1]  0.03421334  0.02672042  0.05131338 -0.30525595 -0.27184475 -0.24037962
+[7] -0.23939744
+
+$se
+Time Series:
+Start = c(2038, 5) 
+End = c(2039, 4) 
+Frequency = 7 
+[1] 0.1252356 0.1556239 0.1751065 0.1888207 0.2050538 0.2204265 0.2346643
+
+> plot(md723,md723.pred$md723.pred)
+> plot.ts(md723,md723.pred$md723.pred)
+> md723.pred=predict(ARIMAfit,n.ahead=14)
+> md723.pred
+$pred
+Time Series:
+Start = c(2038, 5) 
+End = c(2040, 4) 
+Frequency = 7 
+ [1]  0.03421334  0.02672042  0.05131338 -0.30525595 -0.27184475 -0.24037962
+ [7] -0.23939744 -0.23371113 -0.23640305 -0.21516732 -0.56523323 -0.55774820
+[13] -0.54601994 -0.54565414
+
+$se
+Time Series:
+Start = c(2038, 5) 
+End = c(2040, 4) 
+Frequency = 7 
+ [1] 0.1252356 0.1556239 0.1751065 0.1888207 0.2050538 0.2204265 0.2346643 0.2662649
+ [9] 0.2895867 0.3096145 0.3272755 0.3450850 0.3621167 0.3783438

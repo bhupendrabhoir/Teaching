@@ -1,0 +1,41 @@
+> setwd("C://R")
+> library(amap)
+> md=read.csv("md.csv")
+> View(md)
+> md1=md[,c(5,6,7)]
+> View(md1)
+> k1=Kmeans(md1,3,iter.max=200,nstart=1,method=c("euclidean"))
+> k1$centers
+       KVARH     KVARH.1      KVAH
+1 0.13746243 0.005606229 0.7420662
+2 0.01151347 0.006467952 0.0207863
+3 0.04352688 0.052248740 0.3539535
+> k1$size
+[1] 14127 15954 14559
+> k1$withinss
+[1] 0.0399538642 0.0006064648 0.0035707021
+> k1$cluster
+> cluster_output=k1$cluster
+> write.csv(cluster_output,"cluster_output.csv")
+> library(ggplot2)
+> ggplot(md1, aes(KVARH,KVARH.1,KWH)) + geom_point()
+> k1$cluster <- as.factor(k1$cluster) 
+> ggplot(md1, aes(KVARH,KVARH.1,KVAH, color = k1$cluster)) + geom_point()
+
+=========================================================================
+Here you can find one graph to analyze cluster results, "coordinate plot", within "clusplot" package.
+
+It is not based on PCA. It uses function scale to have all the variables means in a range of 0 to 1,
+so you can compare which cluster holds the max/min average for each variable.
+install.packages("devtools") ## To be able to download packages from github
+library(devtools)
+install_github("pablo14/clusplus")
+library(clusplus)
+
+## Create k-means model with 3 clusters
+fit_mtcars=kmeans(mtcars,3)
+
+## Call the function
+plot_clus_coord(fit_mtcars, mtcars)
+
+===========================================================================

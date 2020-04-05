@@ -1,0 +1,19 @@
+setwd("C://R")
+cm=read.csv("cm_lor.csv")
+View(cm)
+colnames(cm)
+cm1=cm[,-c(1)]
+View(cm1)
+FitLogReg=glm(VIOLATED_DUMMY~.,family = binomial("logit"),data=cm1)
+summary(FitLogReg)
+FitLogReg=glm(VIOLATED_DUMMY~WTG_DUMMY11+WTG_DUMMY12+STATE_DUMMY2+STATE_DUMMY3+STATE_DUMMY6+STATE_DUMMY8+ITEM_DUMMY1+RT_DUMMY1+RT_DUMMY8+RT_DUMMY10+RT_DUMMY20+RT_DUMMY21+RT_DUMMY22+RT_DUMMY24+RT_DUMMY28+RT_DUMMY29+RT_DUMMY35+CR_DUMMY1+CR_DUMMY2+CR_DUMMY3,family = binomial("logit"),data=cm1)
+summary(FitLogReg)
+FitLogReg=glm(VIOLATED_DUMMY~WTG_DUMMY11+WTG_DUMMY12+STATE_DUMMY2+ITEM_DUMMY1+RT_DUMMY1+RT_DUMMY8+RT_DUMMY10+RT_DUMMY20+RT_DUMMY21+RT_DUMMY22+RT_DUMMY28+RT_DUMMY29+CR_DUMMY1+CR_DUMMY2+CR_DUMMY3,family = binomial("logit"),data=cm1)
+summary(FitLogReg)
+library(car)
+vif(FitLogReg)
+cm$Predicted=predict(FitLogReg,type="response")
+write.csv(cm,"Predicted_cm_lor.csv")
+
+############
+2 syntax line need to be added

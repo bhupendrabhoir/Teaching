@@ -1,0 +1,55 @@
+setwd("C://R")
+> md41=read.csv("md41.csv")
+> View(md41)
+> md41=ts(md41,start=2012,frequency=7)
+> md141=md41[,-c(1)]
+> View(md141)
+> plot(md141)
+> acf(md141)
+> pacf(md141)
+> plot(diff(md141))
+> plot(diff(diff(md141)))
+> library(forecast)
+> ARIMAfit=auto.arima(md141)
+> ARIMAfit
+Series: md141 
+ARIMA(2,0,0) with non-zero mean 
+
+Coefficients:
+         ar1     ar2  intercept
+      0.6444  0.1678     0.2696
+s.e.  0.0730  0.0824     0.0137
+
+sigma^2 estimated as 0.001234:  log likelihood=359.98
+AIC=-711.96   AICc=-711.74   BIC=-699.05
+> summary(ARIMAfit)
+Series: md141 
+ARIMA(2,0,0) with non-zero mean 
+
+Coefficients:
+         ar1     ar2  intercept
+      0.6444  0.1678     0.2696
+s.e.  0.0730  0.0824     0.0137
+
+sigma^2 estimated as 0.001234:  log likelihood=359.98
+AIC=-711.96   AICc=-711.74   BIC=-699.05
+
+Training set error measures:
+                        ME       RMSE        MAE  MPE MAPE      MASE         ACF1
+Training set -7.733726e-05 0.03484234 0.01953548 -Inf  Inf 0.7006562 -0.001376144
+> md141.pred=predict(ARIMAfit,n.ahead=7)
+> md141.pred
+$pred
+Time Series:
+Start = c(2038, 5) 
+End = c(2039, 4) 
+Frequency = 7 
+[1] 0.05061973 0.08323778 0.11275245 0.13724584 0.15798274 0.17545625 0.19019638
+
+$se
+Time Series:
+Start = c(2038, 5) 
+End = c(2039, 4) 
+Frequency = 7 
+[1] 0.03512677 0.04178784 0.04653713 0.04954388 0.05159137 0.05299714 0.05397520
+> plot(md141,md141.pred$md141.pred)
